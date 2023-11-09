@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// RealTimeDataDisplay.js
 
-function App() {
-  const [count, setCount] = useState(0)
+import React, { useState, useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
+
+const ENDPOINT = 'http://localhost:3000'; // Replace with your backend endpoint
+
+const RealTimeDataDisplay = () => {
+  const [realTimeData, setRealTimeData] = useState([]);
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
+    socket.on('validatedData', (data) => {
+      // Data received from the backend
+      setRealTimeData((prevData) => [...prevData, data]);
+    });
+
+    return () => socket.disconnect();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h2>Real-time Data Display</h2>
+      <ul>
+        {realTimeData.map((data, index) => (
+          <li key={index}>
+            Name: {data.name}, Origin: {data.origin}, Destination: {data.destination}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-export default App
+export default RealTimeDataDisplay;
