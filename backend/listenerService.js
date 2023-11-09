@@ -4,7 +4,12 @@ const mongoose = require('mongoose');
 
 
 mongoose.connect('mongodb://localhost:27017/timeseriesDB', { useNewUrlParser: true, useUnifiedTopology: true });
-
+app.use(
+    cors({
+      credentials: true,
+      origin: process.env.CLIENT_URL,
+    })
+  );
 const DataModel = mongoose.model('Data', {
     name: String,
     origin: String,

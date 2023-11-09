@@ -3,8 +3,14 @@ const io = require('socket.io-client');
 
 const socket = io('http://localhost:3000'); // Connect to listener service
 
-const data = require('./data.json'); // Load the data for name, origin, destination
-
+const data = require('./data.json');
+ // Load the data for name, origin, destination
+app.use(
+    cors({
+      credentials: true,
+      origin: process.env.CLIENT_URL,
+    })
+  );
 function generateRandomMessage() {
     // Create a function to generate a single random message
     const randomIndex = Math.floor(Math.random() * data.length);
